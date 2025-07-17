@@ -1,13 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using IMDBMovieProject.DataAccess;
+﻿using IMDBMovieProject.DataAccess.Data;
 using IMDBMovieProject.Entities.Entities;
 using IMDBMovieProject.WebApi.Utils;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
+
     public class MoviesController : Controller
     {
         private readonly DataBaseContext _context;
@@ -20,7 +26,8 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
         // GET: Admin/Movies
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Movies.ToListAsync());
+            var dataBaseContext = _context.Movies.Include(m => m.Category);
+            return View(await dataBaseContext.ToListAsync());
         }
 
         // GET: Admin/Movies/Details/5
@@ -32,6 +39,7 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             }
 
             var movies = await _context.Movies
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movies == null)
             {
@@ -44,19 +52,22 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
         // GET: Admin/Movies/Create
         public IActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Movies movies, IFormFile? Image)
+        public async Task<IActionResult> Create( Movies movies , IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
-                movies.Image = await FileHelper.FileLoaderAsync(Image);
+                movies.Image = await FileHelper.FileLoaderAsync(Image, "/Img/Movies/");
                 _context.Add(movies);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", movies.CategoryId);
             return View(movies);
         }
 
@@ -73,14 +84,14 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", movies.CategoryId);
             return View(movies);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Movies movies, IFormFile? Image, bool DeleteImage = false)
+        public async Task<IActionResult> Edit(int id, Movies movies , IFormFile? Image, bool DeleteImage = false)
         {
-
             if (id != movies.Id)
             {
                 return NotFound();
@@ -110,6 +121,7 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", movies.CategoryId);
             return View(movies);
         }
 
@@ -122,6 +134,7 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             }
 
             var movies = await _context.Movies
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movies == null)
             {
@@ -139,10 +152,6 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             var movies = await _context.Movies.FindAsync(id);
             if (movies != null)
             {
-                if (!string.IsNullOrEmpty(movies.Image))
-                {
-                    FileHelper.FileRemover(movies.Image);
-                }
                 _context.Movies.Remove(movies);
             }
 
@@ -154,6 +163,5 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
         {
             return _context.Movies.Any(e => e.Id == id);
         }
-
     }
 }

@@ -19,8 +19,14 @@ namespace IMDBMovieProject.Entities.Entities
         public int DurationInMinutes { get; set; }
         public string? Image { get; set; }
         public bool IsActive { get; set; } = true;
+        public bool IsHome { get; set; } = true;
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; }
+
         [Display(Name = "Kayıt Tarihi"), ScaffoldColumn(false)]
         public DateTime CreatedTime { get; set; } = DateTime.Now;
+
+        public int OrderNo { get; set; }
         public Guid? MovieGuid { get; set; } = Guid.NewGuid();
     }
 }

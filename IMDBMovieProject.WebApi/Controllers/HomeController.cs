@@ -1,24 +1,40 @@
+using IMDBMovieProject.DataAccess.Data;
 using IMDBMovieProject.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace IMDBMovieProject.WebApi.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly DataBaseContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(DataBaseContext context)
         {
-            _logger = logger;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
+        {
+            var sliders = await _context.Sliders.ToListAsync();
+            var movies = await _context.Movies.Where(p => p.IsActive && p.IsHome).ToListAsync();
+            var news = await _context.News.ToListAsync();
+
+            var model = new HomePageViewModel()
+            {
+                Sliders = sliders,
+                Movies = movies,
+                News = news
+            };
+            return View(model);
+        }
+        public IActionResult Privacy()
         {
             return View();
         }
-
-        public IActionResult Privacy()
+        [Route("AccessDenied")]
+        public IActionResult AccessDenided()
         {
             return View();
         }

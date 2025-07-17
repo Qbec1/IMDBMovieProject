@@ -5,12 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using IMDBMovieProject.DataAccess;
 using IMDBMovieProject.Entities;
+using IMDBMovieProject.DataAccess.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminPolicy")]
     public class AppUsersController : Controller
     {
         private readonly DataBaseContext _context;
@@ -131,6 +133,8 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
 
             return View(appUser);
         }
+
+
 
         // POST: Admin/AppUsers/Delete/5
         [HttpPost, ActionName("Delete")]

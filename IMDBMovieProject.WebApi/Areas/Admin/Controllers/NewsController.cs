@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using IMDBMovieProject.DataAccess.Data;
+using IMDBMovieProject.Entities.Entities;
+using IMDBMovieProject.WebApi.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using IMDBMovieProject.DataAccess;
-using IMDBMovieProject.Entities.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"), Authorize(Policy = "AdminPolicy")]
     public class NewsController : Controller
     {
         private readonly DataBaseContext _context;
@@ -23,7 +25,8 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
         // GET: Admin/News
         public async Task<IActionResult> Index()
         {
-            return View(await _context.News.ToListAsync());
+            var dataBaseContext = _context.News.Include(m => m.Category);
+            return View(await dataBaseContext.ToListAsync());
         }
 
         // GET: Admin/News/Details/5
@@ -35,6 +38,7 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             }
 
             var news = await _context.News
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (news == null)
             {
@@ -47,22 +51,22 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
         // GET: Admin/News/Create
         public IActionResult Create()
         {
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
 
-        // POST: Admin/News/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Image,IsActive")] News news)
+        public async Task<IActionResult> Create( News news, IFormFile? Image)
         {
             if (ModelState.IsValid)
             {
+                news.Image = await FileHelper.FileLoaderAsync(Image, "/Img/News/");
                 _context.Add(news);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", news.CategoryId);
             return View(news);
         }
 
@@ -79,15 +83,14 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", news.CategoryId);
             return View(news);
         }
 
-        // POST: Admin/News/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Image,IsActive")] News news)
+        public async Task<IActionResult> Edit(int id,  News news, IFormFile? Image, bool DeleteImage = false)
         {
             if (id != news.Id)
             {
@@ -98,6 +101,10 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             {
                 try
                 {
+                    if (DeleteImage)
+                        news.Image = string.Empty;
+                    if (Image is not null)
+                        news.Image = await FileHelper.FileLoaderAsync(Image);
                     _context.Update(news);
                     await _context.SaveChangesAsync();
                 }
@@ -114,6 +121,7 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", news.CategoryId);
             return View(news);
         }
 
@@ -126,6 +134,7 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
             }
 
             var news = await _context.News
+                .Include(m => m.Category)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (news == null)
             {

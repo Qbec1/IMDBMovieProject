@@ -1,0 +1,42 @@
+﻿@model MovieDetailViewModel
+@{
+	ViewData["Title"] = Model.Movie.Title;
+}
+<!-- Product section-->
+<section class="">
+	<div class="container px-4 px-lg-5 my-5">
+		<div class="row gx-4 gx-lg-5 align-items-center">
+			<div class="col-md-6">
+				<img class="card-img-top" src="~/Img/Movies/@Model.Movie.Image" alt="@Model.Movie.Title" style="height:px; object-fit: cover; width: 100%;">
+			</div>
+				
+				<div class="col-md-6">
+				<p class="display-6 fw-normal">
+					Raiting:
+					@Model.Movie.Rating
+				</p>
+					<h1 class="display-5 fw-bolder">
+						@Model.Movie.Title
+					</h1>
+					<p class="lead">
+					@Model.Movie.Description
+					</p>
+					<div class="d-flex">
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+<!-- Related items section-->
+<section class="py-5 bg-light">
+	<div class="container px-4 px-lg-5 mt-5">
+		<h2 class="fw-bolder mb-4">Benzer İçerikler</h2>
+		<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+			@foreach (var item in Model.RelatedMovies)
+			{
+				<partial name="_MovieView" model="item" />
+				
+			}
+		</div>
+	</div>
+</section>

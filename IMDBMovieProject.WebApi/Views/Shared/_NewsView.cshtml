@@ -1,0 +1,19 @@
+﻿@model IMDBMovieProject.Entities.Entities.News
+
+<div class="row">
+    <div class="col-lg-10">
+        <!-- Blog post-->
+        <div class="card mb-4" style="width: 50%;">
+            <span href="#!">
+                <a href="/News/Details/@Model.Id">
+                    <img class="card-img-top" src="~/Img/News/@Model.Image" alt="@Model.Name" style="height: -75px; object-fit: cover; width: 100%;">
+                </a>
+                <div class="card-body">
+                    <div class="small text-muted">@Model.CreatedTime</div>
+                    <h2 class="card-title h4">@Model.Name</h2>
+                    <p class="text">@Model.Description</p>
+                    <a class="btn btn-primary" href="/News/Details/@Model.Id">Daha Fazlası →</a>
+                </div>
+        </div>
+    </div>
+</div>

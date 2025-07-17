@@ -1,0 +1,25 @@
+﻿@model IMDBMovieProject.Entities.Entities.Movies   
+
+<div class="row">
+    <div class="col-lg-10">
+        <!-- Blog post-->
+        <div class="card mb-4">
+            <span href="#!">
+                <a href="/Movie/Details/@Model.Id">
+                    <img class="card-img-top" src="~/Img/Movies/@Model.Image" alt="@Model.Title" style="height: 300px; object-fit: cover; width: 100%;">
+                </a>
+                <form asp-action="Add" asp-controller="Favorites">
+                    <input type="hidden" name="MoviesId" value="@Model.Id" />
+                    <button class="btn btn-transparent" type="submit" style="box-shadow: none">
+                        <i class="bi bi-heart"></i>
+                    </button>
+                </form>
+            <div class="card-body">
+                <div class="small text-muted">@Model.ReleaseDate</div>
+                <h2 class="card-title h4">@Model.Title</h2>
+                <p class="text">@Model.Description</p>
+                    <a class="btn btn-primary" href="/Movie/Details/@Model.Id" ">Daha Fazlası →</a>
+            </div>
+        </div>
+    </div>
+</div>

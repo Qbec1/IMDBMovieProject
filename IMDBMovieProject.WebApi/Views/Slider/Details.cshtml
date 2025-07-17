@@ -1,0 +1,26 @@
+﻿@model IMDBMovieProject.Entities.Entities.Slider
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Model.Title</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <img src="/Img/Slider/@Model.Image" class="img-fluid" alt="@Model.Title" />
+    </div>
+
+    <div class="col-md-6 d-flex flex-column justify-content-center">
+        <p style="font-size: 18px;">@Model.Description</p>
+
+        @if (!string.IsNullOrEmpty(Model.Link))
+        {
+            <a href="@(Model.Link.StartsWith("http") ? Model.Link : "https://" + Model.Link)"
+               target="_blank"
+               class="btn btn-primary mt-3">
+                Web Sitesine Git
+            </a>
+        }
+    </div>
+</div>

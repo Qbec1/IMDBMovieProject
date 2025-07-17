@@ -13,7 +13,7 @@ namespace IMDBMovieProject.DataAccess.Configurations
         public void Configure(EntityTypeBuilder<ImdbTop100> builder)
         {
             builder.Property(x => x.Title).IsRequired().HasMaxLength(50);
-            builder.Property(x => x.Image).HasMaxLength(50);
+            
             builder.HasData();
         }
     }

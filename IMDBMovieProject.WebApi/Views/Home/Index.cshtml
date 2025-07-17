@@ -1,8 +1,28 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model HomePageViewModel
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<partial name="_Slider" model="Model.Sliders"/>
+
+<div calss="my-5"> 
+    <h1 class="text-center">Öne Çıkan Filmler Ve Diziler</h1>
+    <div class ="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        
+        @foreach (var item in Model.Movies)
+        {
+            <partial name="_MovieView" model="item" />
+        }
+    </div>
+    <ul class="pagination justify-content-center my-4">
+        <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a></li>
+        <li class="page-item active" aria-current="page"><a class="page-link" href="#!">1</a></li>
+        <li class="page-item"><a class="page-link" href="#!">2</a></li>
+        <li class="page-item"><a class="page-link" href="#!">3</a></li>
+        <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
+        <li class="page-item"><a class="page-link" href="#!">15</a></li>
+        <li class="page-item"><a class="page-link" href="#!">Older</a></li>
+    </ul>
+
 </div>

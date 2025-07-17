@@ -1,0 +1,38 @@
+﻿@model NewsDetailViewModel
+@{
+	ViewData["Title"] = Model.News.Name;
+}
+<!-- Product section-->
+<section class="">
+	<div class="container px-4 px-lg-5 my-5">
+		<div class="row gx-4 gx-lg-5 align-items-center">
+			<div class="col-md-6">
+				<img class="card-img-top" src="~/Img/News/@Model.News.Image" alt="@Model.News.Name" style="height:auto; object-fit: fill; width: 100%;">
+			</div>
+
+			<div class="col-md-6">
+				<h1 class="display-5 fw-bolder">
+					@Model.News.Name
+				</h1>
+				<p class="lead">
+					@Model.News.Description
+				</p>
+				<div class="d-flex">
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- Related items section-->
+<section class="py-5 bg-light">
+	<div class="container px-4 px-lg-5 mt-5">
+		<h2 class="fw-bolder mb-4">Benzer Haberler</h2>
+		<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+			@foreach (var item in Model.RelatedNews)
+			{
+				<partial name="_NewsView" model="item" />
+
+			}
+		</div>
+	</div>
+</section>

@@ -1,0 +1,28 @@
+﻿@model IMDBMovieProject.Entities.Entities.Category
+@{
+	ViewData["Title"] = Model.Name;
+}
+
+<div class="my-5">
+	<h1 class="text-center">@Model.Name</h1>
+
+	<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+		@foreach (var item in Model.Movies)
+		{
+			<partial name="_MovieView" model="item" />
+		}
+	</div>
+	<div class="row">
+		@foreach (var news in Model.News)
+		{
+			<partial name="_NewsView" model="news" />
+		}
+	</div>
+
+    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        @foreach (var topmovie in Model.ImdbTop100s)
+        {
+                <partial name="_newsview" model="topmovie" />
+        }
+    </div>
+</div>

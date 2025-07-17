@@ -17,6 +17,9 @@ namespace IMDBMovieProject.Entities.Entities
         public string? Image { get; set; }
         [Display(Name = "Aktif?")]
         public bool IsActive { get; set; }
+        public int? CategoryId { get; set; }
+        public Category? Category { get; set; }
+
         [Display(Name = "Kayıt Tarihi"), ScaffoldColumn(false)]
         public DateTime CreatedTime { get; set; } = DateTime.Now;
     }

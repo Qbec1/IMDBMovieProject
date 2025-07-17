@@ -27,5 +27,8 @@ namespace IMDBMovieProject.Entities.Entities
         [Display(Name = "Kayıt Tarihi"), ScaffoldColumn(false)]
         public DateTime CreateDate { get; set; } = DateTime.Now;
         public IList<Movies>? Movies { get; set; }
+        public IList<News>? News { get; set; }
+        public IList<ImdbTop100>? ImdbTop100s { get; set; }
+
     }
 }

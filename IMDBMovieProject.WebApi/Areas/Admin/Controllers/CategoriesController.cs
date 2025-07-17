@@ -1,6 +1,7 @@
-﻿using IMDBMovieProject.DataAccess;
+﻿using IMDBMovieProject.DataAccess.Data;
 using IMDBMovieProject.Entities.Entities;
 using IMDBMovieProject.WebApi.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,8 @@ using System.Threading.Tasks;
 
 namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area("Admin"),Authorize(Policy = "AdminPolicy")]
+    
     public class CategoriesController : Controller
     {
         private readonly DataBaseContext _context;
