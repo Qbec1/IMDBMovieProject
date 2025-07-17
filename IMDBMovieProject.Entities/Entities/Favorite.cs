@@ -16,5 +16,8 @@ namespace IMDBMovieProject.Entities.Entities
         public AppUser User { get; set; }
         public Movies Movie { get; set; }
 
+
+
+
     }
 }
