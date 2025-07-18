@@ -1,50 +1,47 @@
 ﻿<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Anasayfa</a>
-                    </li>
-					@await Component.InvokeAsync("Categories")
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                </ul>
-                <form action="/Movie" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-                    <input name="q" type="search" class="form-control form-control-dark text-bg-dark" placeholder="Arama..." aria-label="Search">
-                </form>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark px-3">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+
+            <!-- SOL: Logo + Menü -->
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand" href="/">
+                    <img src="/img/logo.png" alt="Logo" height="30">
+                </a>
+
+                <!-- Menü Butonu -->
+                <button class="btn btn-outline-light ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#categoryMenu" aria-expanded="false" aria-controls="categoryMenu">
+                    <i class="bi bi-list"></i> Menü
+                </button>
+            </div>
+            <div class="collapse bg-dark px-4" id="categoryMenu">
+                <div class="d-flex flex-wrap gap-2 py-2">
+                    @await Component.InvokeAsync("Categories")
+                </div>
+            </div>
+
+            <!-- ORTA: Arama Kutusu (her zaman küçük) -->
+            <form action="/Movie" class="d-none d-sm-flex mx-auto" role="search" style="width: 250px;">
+                <input name="q" type="search" class="form-control form-control-dark text-bg-dark" placeholder="Arama..." aria-label="Search">
+            </form>
+
+            <!-- SAĞ: Hesap -->
+            <div class="d-flex align-items-center">
                 @if (Context.User.Identity.IsAuthenticated)
                 {
                     <div class="dropdown">
-                        <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person"></i> Hesabım
+                        <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+                            Hesabım
                         </a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="/Account">Hesabım</a></li>
                             <li><a class="dropdown-item" href="/Favorites">Favorilerim</a></li>
                             <li><a class="dropdown-item" href="/Account/SignOut">Oturumu Kapat</a></li>
-
                         </ul>
-                    </div>                    
+                    </div>
                 }
                 else
                 {
-                    <div class="dropdown">
-                        <a class="dropdown-toggle nav-link text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person"></i> Giriş Yap
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/Account/SignIn">Giriş</a></li>
-                            <li><a class="dropdown-item" "dropdown-item" href="/Account/SignUp">Üye Ol</a></li>
-                        </ul>
-                    </div>       
+                    <a class="btn btn-warning rounded-pill px-4" href="/Account/SignIn">Sign in</a>
                 }
             </div>
         </div>

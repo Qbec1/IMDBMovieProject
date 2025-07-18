@@ -57,6 +57,7 @@ namespace IMDBMovieProject.WebApi.Controllers
 
                 _context.Favorites.Add(favorite);
                 _context.SaveChanges();
+                return Redirect(Request.Headers["Referer"].ToString());// Favori index sayfasından önce ki sayfaya yönlendirir.
             }
 
             return RedirectToAction("Index");
