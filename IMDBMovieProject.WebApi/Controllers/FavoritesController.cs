@@ -1,10 +1,13 @@
 ﻿using IMDBMovieProject.DataAccess.Data;
 using IMDBMovieProject.Entities.Entities;
-using IMDBMovieProject.WebApi.ExtensionMethods;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace IMDBMovieProject.WebApi.Controllers
 {
+    [Authorize]
     public class FavoritesController : Controller
     {
         private readonly DataBaseContext _context;
@@ -14,37 +17,65 @@ namespace IMDBMovieProject.WebApi.Controllers
             _context = context;
         }
 
+        private int GetCurrentUserId()
+        {
+            var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+            {
+                throw new Exception("Kullanıcı oturum bilgisi alınamadı.");
+            }
+            return userId;
+        }
+
         public IActionResult Index()
         {
-            var favoriler = GetFavorites();
-            return View(favoriler); // Model gönderildi
+            int userId = GetCurrentUserId();
+
+            var favorites = _context.Favorites
+                .Where(f => f.UserId == userId)
+                .Include(f => f.Movie)
+                .Select(f => f.Movie)
+                .ToList();
+
+            return View(favorites);
         }
 
-        private List<Movies> GetFavorites()
+        public IActionResult Add(int moviesId)
         {
-            return HttpContext.Session.GetJson<List<Movies>>("GetFavorites") ?? new List<Movies>();
-        }
+            int userId = GetCurrentUserId();
 
-        public IActionResult Add(int MoviesId)
-        {
-            var favoriler = GetFavorites();
-            var movies = _context.Movies.Find(MoviesId);
+            var existing = _context.Favorites
+                .FirstOrDefault(f => f.UserId == userId && f.MovieId == moviesId);
 
-            if (movies != null && !favoriler.Any(p => p.Id == MoviesId))
+            if (existing == null)
             {
-                favoriler.Add(movies);
-                HttpContext.Session.SetJson("GetFavorites", favoriler);
+                var favorite = new Favorite
+                {
+                    UserId = userId,
+                    MovieId = moviesId
+                };
+
+                _context.Favorites.Add(favorite);
+                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public IActionResult Remove(int MoviesId)
+        public IActionResult Remove(int moviesId)
         {
-            var favoriler = GetFavorites();
-            var updated = favoriler.Where(m => m.Id != MoviesId).ToList();
-            HttpContext.Session.SetJson("GetFavorites", updated);
+            int userId = GetCurrentUserId();
+
+            var favorite = _context.Favorites
+                .FirstOrDefault(f => f.UserId == userId && f.MovieId == moviesId);
+
+            if (favorite != null)
+            {
+                _context.Favorites.Remove(favorite);
+                _context.SaveChanges();
+            }
+
             return RedirectToAction("Index");
         }
     }

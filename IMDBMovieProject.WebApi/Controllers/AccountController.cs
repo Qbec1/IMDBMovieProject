@@ -75,6 +75,7 @@ namespace IMDBMovieProject.WebApi.Controllers
         }
         
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> SignInAsync(LoginViewModel loginViewModel)
         {
             if (ModelState.IsValid)
@@ -93,13 +94,14 @@ namespace IMDBMovieProject.WebApi.Controllers
                     else
                     {
                         var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, account.Name),
-                            new Claim(ClaimTypes.Role, account.IsAdmin ? "Admin" : "Customer"),
-                            new Claim(ClaimTypes.Email, account.Email),
-                            new Claim("UserGuid", account.UserGuid.ToString()),
-                            new Claim("UserId", account.Id.ToString()),
-                        };
+                {
+                    new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()), // 🔑 BU SATIR EKLENDİ
+                    new Claim(ClaimTypes.Name, account.Name),
+                    new Claim(ClaimTypes.Role, account.IsAdmin ? "Admin" : "Customer"),
+                    new Claim(ClaimTypes.Email, account.Email),
+                    new Claim("UserGuid", account.UserGuid.ToString()),
+                    new Claim("UserId", account.Id.ToString()),
+                };
 
                         var userIdentity = new ClaimsIdentity(claims, "Login");
                         var userPrincipal = new ClaimsPrincipal(userIdentity);
