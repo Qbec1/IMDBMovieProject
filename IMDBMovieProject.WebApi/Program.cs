@@ -3,6 +3,9 @@ using IMDBMovieProject.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
+using IMDBMovieProject.Business.Abstract;
+using IMDBMovieProject.Business.Concrete;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +39,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         x.Cookie.IsEssential = true; 
     });
 
+
+builder.Services.AddScoped(typeof(IService<>), typeof(Service<>));
 
 builder.Services.AddAuthorization(x =>
 {

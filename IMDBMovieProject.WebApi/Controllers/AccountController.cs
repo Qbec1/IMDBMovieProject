@@ -1,4 +1,5 @@
-﻿using IMDBMovieProject.DataAccess.Data;
+﻿using IMDBMovieProject.Business.Abstract;
+using IMDBMovieProject.DataAccess.Data;
 using IMDBMovieProject.Entities;
 using IMDBMovieProject.WebApi.Models;
 using Microsoft.AspNetCore.Authentication; //login
@@ -12,16 +13,24 @@ namespace IMDBMovieProject.WebApi.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly DataBaseContext _context;
+        //private readonly DataBaseContext _context;
 
-        public AccountController(DataBaseContext context)
+        //public AccountController(DataBaseContext context)
+        //{
+        //    _context = context;
+        //}
+
+        private readonly IService<AppUser> _service;
+
+        public AccountController(IService<AppUser> service)
         {
-            _context = context;
+            _service = service;
         }
+
         [Authorize]
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            AppUser user= _context.AppUsers.FirstOrDefault (x=>x.UserGuid.ToString() == 
+            AppUser user= await _service.GetAsync (x=>x.UserGuid.ToString() == 
             HttpContext.User.FindFirst("UserGuid").Value);
             if (user is null)
             {
@@ -39,14 +48,14 @@ namespace IMDBMovieProject.WebApi.Controllers
             return View(model);
         }
         [HttpPost,Authorize]
-        public IActionResult Index(UserEditViewModel model)
+        public async Task<IActionResult> IndexAsync(UserEditViewModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    AppUser user = _context.AppUsers.FirstOrDefault(x => x.UserGuid.ToString() ==
-            HttpContext.User.FindFirst("UserGuid").Value);
+                    AppUser user = await _service.GetAsync(x => x.UserGuid.ToString() ==
+HttpContext.User.FindFirst("UserGuid").Value);
                     if (user is not null)
                     {
                         user.SurName = model.SurName;
@@ -54,8 +63,8 @@ namespace IMDBMovieProject.WebApi.Controllers
                         user.Name = model.Name;
                         user.Password = model.Password;
                         user.Email = model.Email;
-                        _context.AppUsers.Update(user);
-                        _context.SaveChanges();
+                        _service.Update(user);
+                        var sonuc = _service.SaveChanges();
                     }
                     
                 }
@@ -82,7 +91,7 @@ namespace IMDBMovieProject.WebApi.Controllers
             {
                 try
                 {
-                    var account = await _context.AppUsers.FirstOrDefaultAsync(p =>
+                    var account = await _service.GetAsync(p =>
                         p.Email == loginViewModel.Email &&
                         p.Password == loginViewModel.Password && p.IsActive);
 
@@ -130,9 +139,9 @@ namespace IMDBMovieProject.WebApi.Controllers
             appUser.IsAdmin = true;
             if (ModelState.IsValid)
             {
-                _context.Add(appUser);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _service.Add(appUser);
+                await _service.SaveChangesAsync();
+                return RedirectToAction(nameof(IndexAsync));
             }
             return View(appUser);
         }

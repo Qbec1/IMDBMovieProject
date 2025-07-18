@@ -11,7 +11,7 @@ namespace IMDBMovieProject.Business.Concrete
         internal DataBaseContext _context;
         internal DbSet<T> _dbSet;
 
-        public Service(DataBaseContext context, DbSet<T> dbSet)
+        public Service(DataBaseContext context)
         {
             _context = context;
             _dbSet = context.Set<T>();
@@ -61,6 +61,7 @@ namespace IMDBMovieProject.Business.Concrete
         {
             return await _dbSet.AsNoTracking().ToListAsync();
         }
+
         public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression)
         {
             return await _dbSet.Where(expression).AsNoTracking().ToListAsync();
