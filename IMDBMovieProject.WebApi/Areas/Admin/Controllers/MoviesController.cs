@@ -104,7 +104,7 @@ namespace IMDBMovieProject.WebApi.Areas.Admin.Controllers
                     if (DeleteImage)
                         movies.Image = string.Empty;
                     if (Image is not null)
-                        movies.Image = await FileHelper.FileLoaderAsync(Image);
+                        movies.Image = await FileHelper.FileLoaderAsync(Image,  "/Img/Movies/");
                     _context.Update(movies);
                     await _context.SaveChangesAsync();
                 }
