@@ -135,8 +135,8 @@ HttpContext.User.FindFirst("UserGuid").Value);
         [HttpPost]
         public async Task<IActionResult> SignUpAsync(AppUser appUser)
         {
-            appUser.IsActive = false;
-            appUser.IsAdmin = true;
+            appUser.IsActive = true;
+            appUser.IsAdmin = false;
             if (ModelState.IsValid)
             {
                 _service.Add(appUser);

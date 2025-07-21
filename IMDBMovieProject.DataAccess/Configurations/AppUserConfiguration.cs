@@ -33,19 +33,6 @@ namespace IMDBMovieProject.DataAccess.Configurations
             builder.Property(x => x.UserName)
                 .HasColumnType("varchar(50)").HasMaxLength(50);
            
-            builder.HasData(
-                new AppUser
-                {
-                    Id = 1,
-                    CreatedTime = DateTime.Now,
-                    UserName = "Admin",
-                    Email = "admin@movies.io",
-                    IsActive = true,
-                    IsAdmin = true,
-                    Name = "Test",
-                    Password = "123456",
-                    SurName = "test"
-                });
         }
     }
 }

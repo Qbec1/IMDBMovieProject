@@ -14,12 +14,12 @@
                         <i class="bi bi-heart"></i>
                     </button>
                 </form>
-            <div class="card-body">
-                <div class="small text-muted">@Model.ReleaseDate</div>
-                <h2 class="card-title h4">@Model.Title</h2>
-                <p class="text">@Model.Description</p>
-                    <a class="btn btn-primary" href="/Movie/Details/@Model.Id" ">Daha Fazlası →</a>
-            </div>
+                <div class="card-body">
+                    <div class="small text-muted">@Model.ReleaseDate</div>
+                    <h2 class="card-title h4">@Model.Title</h2>
+                    <p class="text-truncate" style="max-width: 100%;">@Model.Description</p>
+                    <a class="btn btn-primary" href="/Movie/Details/@Model.Id">Daha Fazlası →</a>
+                </div>
         </div>
     </div>
 </div>
