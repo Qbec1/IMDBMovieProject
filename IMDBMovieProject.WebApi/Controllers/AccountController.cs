@@ -104,7 +104,7 @@ HttpContext.User.FindFirst("UserGuid").Value);
                     {
                         var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()), // 🔑 BU SATIR EKLENDİ
+                    new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()), //  BU SATIR
                     new Claim(ClaimTypes.Name, account.Name),
                     new Claim(ClaimTypes.Role, account.IsAdmin ? "Admin" : "Customer"),
                     new Claim(ClaimTypes.Email, account.Email),
@@ -141,8 +141,8 @@ HttpContext.User.FindFirst("UserGuid").Value);
             {
                 _service.Add(appUser);
                 await _service.SaveChangesAsync();
-                return RedirectToAction(nameof(IndexAsync));
-            }
+                return RedirectToAction("Index");
+            }  
             return View(appUser);
         }
         public async Task<IActionResult> SignOutAsync()
