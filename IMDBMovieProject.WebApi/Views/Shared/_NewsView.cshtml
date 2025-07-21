@@ -1,19 +1,17 @@
 ﻿@model IMDBMovieProject.Entities.Entities.News
 
-<div class="row">
-    <div class="col-lg-10">
-        <!-- Blog post-->
-        <div class="card mb-4" style="width: 50%;">
-            <span href="#!">
-                <a href="/News/Details/@Model.Id">
-                    <img class="card-img-top" src="~/Img/News/@Model.Image" alt="@Model.Name" style="height: -75px; object-fit: cover; width: 100%;">
-                </a>
-                <div class="card-body">
-                    <div class="small text-muted">@Model.CreatedTime</div>
-                    <h2 class="card-title h4">@Model.Name</h2>
-                    <p class="text">@Model.Description</p>
-                    <a class="btn btn-primary" href="/News/Details/@Model.Id">Daha Fazlası →</a>
-                </div>
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card mb-4 shadow" style="width: 60%;">
+        <a href="/News/Details/@Model.Id">
+            <img class="card-img-top rounded-top" src="~/Img/News/@Model.Image" alt="@Model.Name" style="height: 300px; object-fit: cover; width: 100%;" />
+        </a>
+        <div class="card-body">
+            <div class="small text-muted">
+                <i class="bi bi-calendar3 me-1"></i> @Model.CreatedTime.ToString("dd MMM yyyy")
+            </div>
+            <h2 class="card-title h4 mt-2">@Model.Name</h2>
+            <p class="card-text">@Model.Description</p>
+            <a class="btn btn-primary mt-2" href="/News/Details/@Model.Id">Daha Fazlası →</a>
         </div>
     </div>
 </div>
