@@ -9,42 +9,98 @@
                 </a>
 
                 <!-- Menü Butonu -->
-                <button class="btn btn-outline-light ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#categoryMenu" aria-expanded="false" aria-controls="categoryMenu">
+                <button class="btn btn-outline-light ms-2"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#categoryMenu"
+                        aria-expanded="false"
+                        aria-controls="categoryMenu">
                     <i class="bi bi-list"></i> Menü
                 </button>
             </div>
+
+            <!-- Kategoriler -->
             <div class="collapse bg-dark px-4" id="categoryMenu">
                 <div class="d-flex flex-wrap gap-2 py-2">
                     @await Component.InvokeAsync("Categories")
                 </div>
             </div>
 
-            <!-- ORTA: Arama Kutusu (her zaman küçük) -->
-            <form action="/Movie" class="d-none d-sm-flex mx-auto" role="search" style="width: 250px;">
-                <input name="q" type="search" class="form-control form-control-dark text-bg-dark" placeholder="Arama..." aria-label="Search">
+            <!-- ORTA: Arama -->
+            <form action="/Movie"
+                  class="d-none d-sm-flex mx-auto"
+                  role="search"
+                  style="width: 250px;">
+                <input name="q"
+                       type="search"
+                       class="form-control form-control-dark text-bg-dark"
+                       placeholder="Arama..."
+                       aria-label="Search">
             </form>
 
-            <!-- SAĞ: Hesap -->
+            <!-- SAĞ: HESAP -->
             <div class="d-flex align-items-center">
+
                 @if (Context.User.Identity.IsAuthenticated)
                 {
                     <div class="dropdown">
-                        <a class="nav-link dropdown-toggle text-light" href="#" role="button" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle text-light"
+                           href="#"
+                           role="button"
+                           data-bs-toggle="dropdown">
                             Hesabım
                         </a>
+
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="/Account">Hesabım</a></li>
+
+                            <!-- ADMIN PANEL (SADECE ADMIN) -->
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li>
+                                    <a class="dropdown-item text-danger fw-bold"
+                                       href="/Admin/Main/Index">
+                                        <i class="bi bi-shield-lock"></i> Admin Paneli
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider" /></li>
+                            }
+
+                            <li>
+                                <a class="dropdown-item" href="/Account">
+                                    Hesabım
+                                </a>
+                            </li>
+
                             <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="/Favorites">Favorilerim</a></li>
+
+                            <li>
+                                <a class="dropdown-item" href="/Favorites">
+                                    Favorilerim
+                                </a>
+                            </li>
+
                             <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="/Account/SignOut">Oturumu Kapat</a></li>
+
+                            <li>
+                                <a class="dropdown-item text-danger"
+                                   href="/Account/SignOut">
+                                    Oturumu Kapat
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 }
                 else
                 {
-                    <a class="btn btn-warning rounded-pill px-3 m-2" href="/Account/SignIn">Giriş Yap</a>
-                    <a class="btn btn-warning rounded-pill px-3" href="/Account/SignUp">Kayıt Ol</a>
+                    <a class="btn btn-warning rounded-pill px-3 m-2"
+                       href="/Account/SignIn">
+                        Giriş Yap
+                    </a>
+
+                    <a class="btn btn-warning rounded-pill px-3"
+                       href="/Account/SignUp">
+                        Kayıt Ol
+                    </a>
                 }
             </div>
         </div>
