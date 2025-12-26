@@ -3,6 +3,7 @@ using IMDBMovieProject.Entities.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 
 namespace IMDBMovieProject.WebApi.Controllers
@@ -31,10 +32,11 @@ namespace IMDBMovieProject.WebApi.Controllers
         {
             int userId = GetCurrentUserId();
 
-            var favorites = _context.Favorites
-                .Where(f => f.UserId == userId)
-                .Include(f => f.Movie)
-                .Select(f => f.Movie)
+            var favorites = _context.Movies
+                .FromSqlRaw(
+                    "EXEC GetUserFavorites @UserId",
+                    new SqlParameter("@UserId", userId)
+                )
                 .ToList();
 
             return View(favorites);
@@ -57,7 +59,8 @@ namespace IMDBMovieProject.WebApi.Controllers
 
                 _context.Favorites.Add(favorite);
                 _context.SaveChanges();
-                return Redirect(Request.Headers["Referer"].ToString());// Favori index sayfasından önce ki sayfaya yönlendirir.
+
+                return Redirect(Request.Headers["Referer"].ToString());
             }
 
             return RedirectToAction("Index");
